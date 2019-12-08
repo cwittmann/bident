@@ -18,6 +18,20 @@ function cameraStart() {
     });
 }
 
+function postData(input) {    
+    $.ajax({
+        type: "POST",
+        url: "identify.py",
+        data: { param: input },
+        success: callbackFunc
+    });
+}
+
+function callbackFunc(response) {
+    // do something with the response
+    console.log(response);
+}
+
 // Take a picture when cameraTrigger is tapped
 cameraTrigger.onclick = function() {
     cameraSensor.width = cameraView.videoWidth;
@@ -25,6 +39,8 @@ cameraTrigger.onclick = function() {
     cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
     cameraOutput.src = cameraSensor.toDataURL("image/webp");
     cameraOutput.classList.add("taken");
+    
+    postData(cameraOutput.src);
 };
 
 // Start the video stream when the window loads
