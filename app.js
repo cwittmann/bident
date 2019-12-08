@@ -21,13 +21,19 @@ function cameraStart() {
 function postData(input) {    
     $.ajax({
         type: "POST",
-        url: "identify.py",
+        url: "http://localhost:8000/home",
         data: { param: input },
-        success: callbackFunc
+        success: callbackFunc,
+        error: errorFunc
     });
 }
 
 function callbackFunc(response) {
+    // do something with the response
+    alert(response);
+}
+
+function errorFunc(response) {
     // do something with the response
     alert(response);
 }
