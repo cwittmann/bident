@@ -29,13 +29,13 @@ function postData(input) {
 }
 
 function callbackFunc(response) {
-    // do something with the response
-    alert(response);
+    // do something with the response    
+    console.log(response);
 }
 
 function errorFunc(response) {
     // do something with the response
-    alert(response);
+    console.log(response);
 }
 
 // Take a picture when cameraTrigger is tapped

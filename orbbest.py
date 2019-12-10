@@ -1,21 +1,25 @@
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+from matplotlib import pyplot as plt
 import time
 
 MIN_MATCH_COUNT = 10
 
-startTime = time.time()
-
 img1 = cv2.imread('images/tyn1.png', 0) # queryImage
 img2 = cv2.imread('images/tyn2.png', 0) # trainImage
 
-# Initiate SIFT detector
-sift = cv2.xfeatures2d.SIFT_create()
+startTime = time.time()
 
-# find the keypoints and descriptors with SIFT
-kp1, des1 = sift.detectAndCompute(img1,None)
-kp2, des2 = sift.detectAndCompute(img2,None)
+# Initiate ORB detector
+orb = cv2.ORB_create()
+
+# find the keypoints and descriptors with ORB
+kp1, des1 = orb.detectAndCompute(img1,None)
+kp2, des2 = orb.detectAndCompute(img2,None)
+
+des1 = np.float32(des1)
+des2 = np.float32(des2)
+
 FLANN_INDEX_KDTREE = 1
 index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
 search_params = dict(checks = 50)
@@ -41,11 +45,7 @@ else:
     print( "Not enough matches are found - {}/{}".format(len(good), MIN_MATCH_COUNT) )
     matchesMask = None
 
-draw_params = dict(matchColor = (0,255,0), # draw matches in green color
-                   singlePointColor = None,
-                   matchesMask = matchesMask, # draw only inliers
-                   flags = 2)
-img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
+img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None, flags = 2)
 
 endTime = time.time()
 print (str(endTime - startTime) + " seconds" )
