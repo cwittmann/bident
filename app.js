@@ -30,12 +30,12 @@ function postData(input) {
 
 function callbackFunc(response) {
     // do something with the response    
-    alert(response);
+    alert(response.statusText);
 }
 
 function errorFunc(response) {
     // do something with the response
-    alert(response);
+    alert(response.statusText);
 }
 
 // Take a picture when cameraTrigger is tapped
