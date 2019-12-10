@@ -21,7 +21,7 @@ function cameraStart() {
 function postData(input) {    
     $.ajax({
         type: "POST",
-        url: "http://localhost:8000/home",
+        url: "http://cwittmann.pythonanywhere.com/",
         data: { param: input },
         success: callbackFunc,
         error: errorFunc
