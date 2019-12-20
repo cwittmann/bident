@@ -26,8 +26,10 @@ function postData(data) {
     data.append('file', photo);
 
     fetch("http://127.0.0.1:5000/", { method: 'POST', body: data })
-        .then(function(data) {
-            console.log(data);
+        .then(function(response) {
+            response.text().then(function (text) {
+                console.log(text);
+              });
         })
         .catch(function(error) {            
             console.log(error);    

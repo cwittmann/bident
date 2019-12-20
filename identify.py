@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, redirect, request
+from flask import Flask, jsonify, redirect, request, Response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
@@ -17,27 +17,22 @@ def returnResult():
         
         if request.files == None:
             print("NO FILES")
-        
-        print(len(request.files))        
 
         file = request.files['file']        
 
         if file is None:
             print('=== NO FILE NAMED FILE ===')
-            return "ERROR"
-        else:
-            print('=== FILE FOUND ===')
-            print(file)            
+            return "ERROR: NO FILE NAMED FILE"        
         
         if file.filename == '':
             print('=== NO SELECTED FILE ===')
-            return "ERROR"
+            return "ERROR: FILENAME IS EMPTY"
         if file:
             print('=== FILE FOUND ===')
             filename = secure_filename(file.filename)
             file.save('./uploads/' + str(filename))
-            print('=== FILE SUCCESSFULLY UPLOADED ===')
-            return "SUCCESS"
+            print('=== FILE SUCCESSFULLY UPLOADED ===')            
+            return "FILE UPLOADED SUCCESSFULLY"
 
 # app.run(port=8000, debug=True)
 
