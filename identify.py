@@ -1,14 +1,10 @@
 from flask import Flask, jsonify, redirect, request, Response
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
 
-UPLOAD_FOLDER = '/uploads'
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif', 'bmp'])
-
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-CORS(app)
+cors = CORS(app)
 
 @app.route('/', methods = ['GET', 'POST'])
 def returnResult():
@@ -34,6 +30,6 @@ def returnResult():
             print('=== FILE SUCCESSFULLY UPLOADED ===')            
             return "FILE UPLOADED SUCCESSFULLY"
 
-# app.run(port=8000, debug=True)
+app.run(port=5000, debug=True, threaded=True)
 
 # curl -F "file=@image.jpg" http://localhost:8000/home
