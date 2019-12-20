@@ -30,6 +30,6 @@ def returnResult():
             print('=== FILE SUCCESSFULLY UPLOADED ===')            
             return "FILE UPLOADED SUCCESSFULLY"
 
-app.run(port=5000, debug=True, threaded=True)
+# app.run(port=5000, debug=True, threaded=True)
 
 # curl -F "file=@image.jpg" http://localhost:8000/home
