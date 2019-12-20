@@ -18,33 +18,20 @@ function cameraStart() {
     });
 }
 
-function postData(input) {    
-    $.ajax({
-        type: "POST",
-        url: "http://cwittmann.pythonanywhere.com/",
-        data: { param: input },
-        success: callbackFunc,
-        error: errorFunc
-    });
+function postData(data) {
 
-    fetch("http://cwittmann.pythonanywhere.com/", { method: 'POST', body: input, mode: 'cors' })
+    var photo = document.querySelector('#file').files[0]
+    data = new FormData();
+
+    data.append('file', photo);
+
+    fetch("http://127.0.0.1:5000/", { method: 'POST', body: data })
         .then(function(data) {
             console.log(data);
         })
-        .catch(function(error) {
-            alert(error);
+        .catch(function(error) {            
             console.log(error);    
         });
-}
-
-function callbackFunc(response) {
-    // do something with the response    
-    alert(response.statusText);
-}
-
-function errorFunc(response) {
-    // do something with the response
-    alert(response.statusText);
 }
 
 // Take a picture when cameraTrigger is tapped
