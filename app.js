@@ -26,6 +26,15 @@ function postData(input) {
         success: callbackFunc,
         error: errorFunc
     });
+
+    fetch("http://cwittmann.pythonanywhere.com/", { method: 'POST', body: input, mode: 'cors' })
+        .then(function(data) {
+            console.log(data);
+        })
+        .catch(function(error) {
+            alert(error);
+            console.log(error);    
+        });
 }
 
 function callbackFunc(response) {
