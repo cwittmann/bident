@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, redirect, request, Response
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
-import os
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -24,12 +23,11 @@ def returnResult():
             print('=== NO SELECTED FILE ===')
             return "ERROR: FILENAME IS EMPTY"
         if file:
-            print('=== FILE FOUND ===')
-            filename = secure_filename(file.filename)
+            print('=== FILE FOUND ===')            
             file.save('./uploads/blob.jpeg')
             print('=== FILE SUCCESSFULLY UPLOADED ===')            
             return "FILE UPLOADED SUCCESSFULLY"
 
-app.run(port=5000, debug=True, threaded=True)
+app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
 
 # curl -F "file=@image.jpg" http://localhost:8000/home

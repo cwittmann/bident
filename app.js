@@ -38,7 +38,7 @@ function postDataFromFile(data) {
 }
 
 function postDataFromCamera(formData) {   
-        fetch("http://127.0.0.1:5000/", { method: 'POST', body: formData })
+        fetch("http://192.168.2.103:5000/", { method: 'POST', body: formData })
             .then(function(response) {
                 response.text().then(function (text) {
                     console.log(text);
@@ -75,7 +75,7 @@ cameraTrigger.onclick = function() {
     cameraSensor.height = cameraView.videoHeight;
     cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
     cameraOutput.classList.add("taken");
-    dataURL = cameraSensor.toDataURL('image/jpeg', 0.5);
+    dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
     var blob = dataURItoBlob(dataURL);
     var fd = new FormData(document.forms[0]);
     fd.append("canvasImage", blob);    
