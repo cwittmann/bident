@@ -14,7 +14,7 @@ def returnResult():
         if request.files == None:
             print("NO FILES")
 
-        file = request.files['file']        
+        file = request.files['canvasImage']        
 
         if file is None:
             print('=== NO FILE NAMED FILE ===')
@@ -26,10 +26,10 @@ def returnResult():
         if file:
             print('=== FILE FOUND ===')
             filename = secure_filename(file.filename)
-            file.save('./uploads/' + str(filename))
+            file.save('./uploads/blob.jpeg')
             print('=== FILE SUCCESSFULLY UPLOADED ===')            
             return "FILE UPLOADED SUCCESSFULLY"
 
-# app.run(port=5000, debug=True, threaded=True)
+app.run(port=5000, debug=True, threaded=True)
 
 # curl -F "file=@image.jpg" http://localhost:8000/home
