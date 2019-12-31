@@ -44,7 +44,7 @@
       }
     ],
     "lang": "de-DE",
-    "start_url": "/index.html",
+    "start_url": "https://cwittmann.github.io",
     "display": "standalone",
     "background_color": "white",
     "theme_color": "white"
