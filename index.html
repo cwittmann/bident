@@ -2,8 +2,10 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">    <!-- Name of your awesome camera app -->
-        <title>Camera App</title>    <!-- Link to your main style sheet-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="white"/>
+        <title>BIdent Building Identification</title>
+        <link rel="manifest" href="/manifest.json">        
         <link rel="stylesheet" href="style.css">   
         <script
 			  src="https://code.jquery.com/jquery-3.4.1.js"
@@ -11,29 +13,17 @@
 			  crossorigin="anonymous"></script>  
     </head>
     
-    <body>    
-
+    <body>  
         <input type="file" name="file" id="file">
-       
-        <!-- Camera -->
-        <main id="camera"> 
-            <!-- Camera sensor -->
-            <canvas id="camera--sensor"></canvas>
-            
-            <!-- Camera view -->
-            <video id="camera--view" autoplay playsinline></video>
-            
-            <!-- Camera output -->
-            <img src="//:0" alt="" id="camera--output">
-            
-            <!-- Camera trigger -->
+               
+        <main id="camera">             
+            <canvas id="camera--sensor"></canvas>                        
+            <video id="camera--view" autoplay playsinline></video>                        
+            <img src="//:0" alt="" id="camera--output">                        
             <button id="camera--trigger">Take a picture</button>
 
         </main>    
-
-        <!-- Reference to your JavaScript file -->        
+       
         <script src="app.js"></script>  
-
-
     </body>
 </html>

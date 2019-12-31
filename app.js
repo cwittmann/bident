@@ -83,6 +83,16 @@ cameraTrigger.onclick = function() {
     postDataFromCamera(fd);
 };
 
+// Register Service Worker
+window.onload = () => {
+    'use strict';
+  
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+               .register('./service-worker.js');
+    }
+  }
+
 // Start the video stream when the window loads
 window.addEventListener("load", cameraStart, false);
 
