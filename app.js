@@ -1,13 +1,18 @@
-// Set constraints for the video stream
-var constraints = { video: { facingMode: "user" }, audio: false };// Define constants
-
 const cameraView = document.querySelector("#camera--view"),
     cameraOutput = document.querySelector("#camera--output"),
     cameraSensor = document.querySelector("#camera--sensor"),
     cameraTrigger = document.querySelector("#camera--trigger")// Access the device camera and stream to cameraView
 
 function cameraStart() {
-    
+    if (window.stream) {
+        window.stream.getTracks().forEach(track => {
+            track.stop();
+        });
+      }
+
+      // Set constraints for the video stream
+    var constraints = { video: { facingMode: "environment" }, audio: false };
+
     navigator.mediaDevices
         .getUserMedia(constraints)
         .then(function(stream) {
@@ -19,34 +24,16 @@ function cameraStart() {
     });
 }
 
-function postDataFromFile(data) {
-
-    var photo = document.querySelector('#file').files[0]
-    data = new FormData();
-
-    data.append('file', photo);
-
-    fetch("http://127.0.0.1:5000/", { method: 'POST', body: data })
+function postDataFromCamera(formData) {   
+    fetch("http://192.168.2.103:5000/", { method: 'POST', body: formData })
         .then(function(response) {
             response.text().then(function (text) {
                 console.log(text);
-              });
+            });
         })
-        .catch(function(error) {            
-            console.log(error);    
+        .catch(function(error) {
+            console.log(error);
         });
-}
-
-function postDataFromCamera(formData) {   
-        fetch("http://192.168.2.103:5000/", { method: 'POST', body: formData })
-            .then(function(response) {
-                response.text().then(function (text) {
-                    console.log(text);
-                });
-            })
-            .catch(function(error) {            
-                console.log(error);    
-            });	   
 }
 
 function dataURItoBlob(dataURI) {
@@ -77,10 +64,10 @@ cameraTrigger.onclick = function() {
     cameraOutput.classList.add("taken");
     dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
     var blob = dataURItoBlob(dataURL);
-    var fd = new FormData(document.forms[0]);
-    fd.append("canvasImage", blob);    
+    var formData = new FormData(document.forms[0]);
+    formData.append("canvasImage", blob);    
     
-    postDataFromCamera(fd);
+    postData(formData);
 };
 
 // Register Service Worker
@@ -96,12 +83,5 @@ window.onload = () => {
 // Start the video stream when the window loads
 window.addEventListener("load", cameraStart, false);
 
-window.addEventListener('load', function() {
-    document.querySelector('input[type="file"]').addEventListener('change', function() {
-        if (this.files && this.files[0]) {                        
-            postDataFromFile(this.files)
-        }
-    });
-  });
-  
+
   
