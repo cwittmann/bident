@@ -59,8 +59,7 @@ function dataURItoBlob(dataURI) {
 cameraTrigger.onclick = function() {
     cameraSensor.width = cameraView.videoWidth;
     cameraSensor.height = cameraView.videoHeight;
-    cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);
-    cameraOutput.classList.add("taken");
+    cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);    
     dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
     var blob = dataURItoBlob(dataURL);
     var formData = new FormData(document.forms[0]);

@@ -7,17 +7,27 @@
         <title>BIdent Building Identification</title>
         <link rel="manifest" href="manifest.json">        
         <link rel="stylesheet" href="style.css">   
+        <link rel="shortcut icon" type="image/x-icon" href="images/icons/favicon.ico">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300&display=swap" rel="stylesheet"> 
         <script
 			  src="https://code.jquery.com/jquery-3.4.1.js"
 			  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
 			  crossorigin="anonymous"></script>  
     </head>
     
-    <body>                         
+    <body>     
+        <header class="page-header">
+            <h1>BIdent Building Identification</h1>
+        </header>
+        
         <main id="camera">             
             <canvas id="camera--sensor"></canvas>                        
             <video id="camera--view" autoplay playsinline></video>                                                       
-            <button id="camera--trigger">Identify</button>
+            <button id="camera--trigger">                
+                <img src="images/icons/camera.svg"/>                    
+            </button>                            
+            <h2>Click to identify building</h2>                
+            
         </main>           
         
         <script src="app.js"></script>          
