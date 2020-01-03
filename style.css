@@ -14,7 +14,7 @@ html, body{
     text-align: center;            
     background-color: #78c1e5;
     color: white;
-    z-index: 1;
+    z-index: 2;
   }
 
   h1 {
@@ -56,3 +56,70 @@ html, body{
   #camera--trigger img {    
     opacity: 1;    
   }  
+
+  #detail-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    display: none;
+    z-index: 1;    
+  }  
+  
+  .details-text {      
+    color: black;        
+    text-align: justify;
+    padding: 0 5% 0 5%;            
+  }
+
+  .details-icon {
+    width: 18px;
+    height: 18px;    
+    padding: 5px;
+    border-radius: 25px;
+    background-color: #78c1e5;
+    opacity: 0.8;    
+    vertical-align: middle;
+  }
+
+  #details-image {
+    width: 100%;    
+  }
+
+  #details-name {    
+    margin-top: 20px;
+    font-size: 36px;
+  }
+
+  #details-parent {  
+    margin-top: 20px;
+    font-size: 18px;    
+  }  
+
+  #details-parent span {    
+    margin-left: 3%;
+    font-weight: 900;
+    
+  }
+
+  #details-description { 
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  #details-description span {    
+    font-weight: 900;
+  }
+
+  #details-quality {
+    
+    margin-top: 20px;
+    font-size: 18px;
+  }
+
+  #details-quality span {
+    margin-left: 3%;
+    font-weight: 900;
+  }

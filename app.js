@@ -26,13 +26,52 @@ function cameraStart() {
 function postData(formData) {   
     fetch("http://192.168.2.103:5000/", { method: 'POST', body: formData })
         .then(function(response) {
-            response.text().then(function (text) {
-                console.log(text);
+            response.text().then(function (response) {
+                console.log(response);
+                showDetails(response);
             });
         })
-        .catch(function(error) {
-            console.log(error);
+        .catch(function(response) {
+            console.log(response);
         });
+}
+
+function showDetails(response){
+    var responseJSON = JSON.parse(response);
+    
+    detailDialog = document.querySelector("#detail-dialog");
+    detailDialog.style.display = "block";
+
+    name = responseJSON.name;
+    parent = responseJSON.parent;
+    description = responseJSON.description;
+    quality = responseJSON.quality;
+
+    if (name != undefined){
+        detailsName = document.querySelector("#details-name");
+        detailsName.append(name);        
+    }
+
+    if (parent != undefined){
+        detailsParent = document.querySelector("#details-parent");
+        detailsParent.append(parent);        
+    }
+
+    if (description != undefined){
+        detailsDescription = document.querySelector("#details-description");
+        detailsDescription.append(description);     
+    }
+
+    if (quality != undefined){
+        detailsQuality = document.querySelector("#details-quality");
+        detailsQuality.append(quality + " %");     
+    }
+}
+
+function closeDetails(){
+    detailDialog = document.querySelector("#detail-dialog");
+    detailDialog.style.display = "none";
+    window.location.href = "index.html";
 }
 
 function dataURItoBlob(dataURI) {

@@ -19,6 +19,21 @@
         <header class="page-header">
             <h1>BIdent Building Identification</h1>
         </header>
+
+        <div id="detail-dialog" onclick="closeDetails()">
+            <img src="images/image0001.jpg" id="details-image"></img>
+            <div id="details-name" class="details-text"></div>  
+
+            <div id="details-parent" class="details-text">
+                <img src="images/icons/parent.svg" class="details-icon">
+                <span>Teil von: </span></div>            
+            <div id="details-description" class="details-text">
+                <img src="images/icons/description.svg" class="details-icon">
+                <span>Beschreibung: </span></div>            
+            <div id="details-quality" class="details-text">
+                <img src="images/icons/quality.svg" class="details-icon">
+                <span>Identifikationssicherheit: </span></div>
+        </div>
         
         <main id="camera">             
             <canvas id="camera--sensor"></canvas>                        
