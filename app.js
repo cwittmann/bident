@@ -24,7 +24,10 @@ function cameraStart() {
 }
 
 function postData(formData) {   
-    fetch("http://192.168.2.103:5000/", { method: 'POST', body: formData })
+    // Local: http://192.168.2.103:5000/
+    // Web Server: https://cwittmann.pythonanywhere.com/
+    
+    fetch("https://cwittmann.pythonanywhere.com/", { method: 'POST', body: formData })
         .then(function(response) {
             response.text().then(function (response) {
                 console.log(response);
