@@ -1,48 +1,65 @@
 import cv2
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import json
 
 app = Flask(__name__)
 cors = CORS(app)
 
-def calculateQuality():
-    img1 = cv2.imread('uploads/blob.jpeg', 0) # queryImage    
-    img2 = cv2.imread('images/tyn2.png', 0) # trainImage
+def getBestMatch():
+
+    jsonDataFile = open("data/data.json")
+    data = json.load(jsonDataFile)
+
+    imgList = []
+
+    for dataObject in data:
+        objectId = dataObject["id"]
+        filename = 'images/' + str(objectId) + '.jpg'
+        imgFile = cv2.imread(filename, 0)        
+        imgList.append(imgFile)
+
+    imgQuery = cv2.imread('uploads/blob.jpeg', 0) # queryImage  
 
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
 
-    # find the keypoints and descriptors with SIFT
-    kp1, des1 = sift.detectAndCompute(img1,None)
-    kp2, des2 = sift.detectAndCompute(img2,None)
     FLANN_INDEX_KDTREE = 1
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
     search_params = dict(checks = 50)
     flann = cv2.FlannBasedMatcher(index_params, search_params)
-    matches = flann.knnMatch(des1,des2,k=2)
 
-    # store all the good matches as per Lowe's ratio test.
-    good = []
-    for m,n in matches:
-        if m.distance < 0.7*n.distance:
-            good.append(m)
+    # find the keypoints and descriptors with SIFT
+    kpQuery, desQuery = sift.detectAndCompute(imgQuery,None)
 
-    numberOfGoodMatches = len(good)
-    print("NUMBER OF GOOD MATCHES: " + str(numberOfGoodMatches)) 
+    goodMatches = []
 
-    if (numberOfGoodMatches == 0):
-        return 0
-    if (numberOfGoodMatches > 100):
-        return 100
-    return numberOfGoodMatches
+    for img in imgList:
+        kpDB, desDB = sift.detectAndCompute(img,None)
+        matches = flann.knnMatch(desQuery,desDB,k=2)
+        
+        goodMatchesCount = 0
+
+        for m,n in matches:
+            if m.distance < 0.7*n.distance:
+                goodMatchesCount = goodMatchesCount + 1
+        
+        goodMatches.append(goodMatchesCount)  
+  
+    indexOfBestMatch = goodMatches.index(max(goodMatches))
+
+    bestMatch = data[indexOfBestMatch]
+
+    return bestMatch["id"], "99.9"
     
 
 def createResult():
+    
+    bestMatchId, bestMatchCertainty = getBestMatch()
+    
     return jsonify(
-        name="Nordwestfassade",
-        parent="Altes Rathaus, Bamberg",
-        description="Ursprünglich 1755 von Johann Anwander geschaffen und vielfach restauriert, u.a. 1959-1962 durch Anton Greiner. Beide Gebäudeseiten sind vollständig mit allegorischen Szenen und architektonischen Details verziert.",
-        quality=calculateQuality()
+        id=bestMatchId,
+        certainty=bestMatchCertainty
     )
 
 @app.route('/', methods = ['GET', 'POST'])

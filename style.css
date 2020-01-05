@@ -89,11 +89,13 @@ html, body{
   }
 
   #details-name {    
+    display: none;
     margin-top: 20px;
     font-size: 36px;
   }
 
   #details-parent {  
+    display: none;
     margin-top: 20px;
     font-size: 18px;    
   }  
@@ -105,6 +107,7 @@ html, body{
   }
 
   #details-description { 
+    display: none;
     margin-top: 20px;
     font-size: 18px;
   }
@@ -113,13 +116,13 @@ html, body{
     font-weight: 900;
   }
 
-  #details-quality {
-    
+  #details-certainty {    
+    display: none;
     margin-top: 20px;
     font-size: 18px;
   }
 
-  #details-quality span {
+  #details-certainty span {
     margin-left: 3%;
     font-weight: 900;
   }

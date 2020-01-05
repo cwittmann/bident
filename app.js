@@ -25,9 +25,10 @@ function cameraStart() {
 
 function postData(formData) {   
     // Local: http://192.168.2.103:5000/
+    // Local: http://127.0.0.1:5000/
     // Web Server: https://cwittmann.pythonanywhere.com/
     
-    fetch("https://cwittmann.pythonanywhere.com/", { method: 'POST', body: formData })
+    fetch("http://127.0.0.1:5000/", { method: 'POST', body: formData })
         .then(function(response) {
             response.text().then(function (response) {
                 console.log(response);
@@ -41,34 +42,59 @@ function postData(formData) {
 
 function showDetails(response){
     var responseJSON = JSON.parse(response);
+    id = responseJSON.id;
+    certainty = responseJSON.certainty;
+
+    // Get data about building objects from file data/data.js
+    var dataObjects = JSON.parse(JSON.stringify(objects));
+
+    var matchingObject;
+
+    $.each(dataObjects, function(idx, dataObject) {
+        if (dataObject["id"] == responseJSON.id){
+            matchingObject = dataObject;            
+        }
+      });   
+    
+    name = matchingObject.name;
+    parent = matchingObject.parent;
+    description = matchingObject.description;    
     
     detailDialog = document.querySelector("#detail-dialog");
-    detailDialog.style.display = "block";
+    detailDialog.style.display = "block";    
 
-    name = responseJSON.name;
-    parent = responseJSON.parent;
-    description = responseJSON.description;
-    quality = responseJSON.quality;
+    detailsImage = document.querySelector("#details-image");
+    detailsImage.src = "images/" + id + ".jpg"
 
     if (name != undefined){
         detailsName = document.querySelector("#details-name");
+        detailsName.style.display = "block";
         detailsName.append(name);        
     }
 
     if (parent != undefined){
+        var parent;
+        $.each(dataObjects, function(idx, dataObject) {
+            if (dataObject["id"] == parent){
+                parent = dataObject;            
+            }
+          }); 
         detailsParent = document.querySelector("#details-parent");
-        detailsParent.append(parent);        
+        detailsParent.style.display = "block";
+        detailsParent.append(parent.name);        
     }
 
     if (description != undefined){
         detailsDescription = document.querySelector("#details-description");
+        detailsDescription.style.display = "block";
         detailsDescription.append(description);     
     }
 
-    if (quality != undefined){
-        detailsQuality = document.querySelector("#details-quality");
-        detailsQuality.append(quality + " %");     
-    }
+    if (certainty != undefined){
+        detailsCertainty = document.querySelector("#details-certainty");
+        detailsCertainty.style.display = "block";
+        detailsCertainty.append(certainty + " %");     
+    }    
 }
 
 function closeDetails(){
