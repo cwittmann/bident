@@ -28,7 +28,7 @@ function postData(formData) {
     // Local: http://127.0.0.1:5000/
     // Web Server: https://cwittmann.pythonanywhere.com/
     
-    fetch("http://127.0.0.1:5000/", { method: 'POST', body: formData })
+    fetch("https://cwittmann.pythonanywhere.com/", { method: 'POST', body: formData })
         .then(function(response) {
             response.text().then(function (response) {
                 console.log(response);
