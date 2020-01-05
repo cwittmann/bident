@@ -22,7 +22,7 @@ def getBestMatch():
     imgQuery = cv2.imread('uploads/blob.jpeg', 0) # queryImage  
 
     # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    akaze = cv2.AKAZE_create()
 
     FLANN_INDEX_KDTREE = 1
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -30,12 +30,12 @@ def getBestMatch():
     flann = cv2.FlannBasedMatcher(index_params, search_params)
 
     # find the keypoints and descriptors with SIFT
-    kpQuery, desQuery = sift.detectAndCompute(imgQuery,None)
+    kpQuery, desQuery = akaze.detectAndCompute(imgQuery,None)
 
     goodMatches = []
 
     for img in imgList:
-        kpDB, desDB = sift.detectAndCompute(img,None)
+        kpDB, desDB = akaze.detectAndCompute(img,None)
         matches = flann.knnMatch(desQuery,desDB,k=2)
         
         goodMatchesCount = 0
