@@ -37,6 +37,7 @@ function postData(formData) {
         })
         .catch(function(response) {
             console.log(response);
+            alert(response);
         });
 }
 
