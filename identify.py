@@ -40,6 +40,7 @@ def getBestMatch():
         
         goodMatchesCount = 0
 
+        # Apply ratio test
         for m,n in matches:
             if m.distance < 0.7*n.distance:
                 goodMatchesCount = goodMatchesCount + 1
