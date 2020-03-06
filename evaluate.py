@@ -17,7 +17,7 @@ def detect(detector, convertToFloat, imgQuery, imgPathList):
 
     if (convertToFloat):
         desQuery = np.float32(desQuery)    
-
+    
     for imgPath in imgPathList:
 
         img = cv2.imread(imgPath, 0)
@@ -35,13 +35,20 @@ def detect(detector, convertToFloat, imgQuery, imgPathList):
             if m.distance < 0.7*n.distance:
                 goodMatchesCount = goodMatchesCount + 1
 
-        return goodMatchesCount       
+        print(str(imgPath) + ": " + str(goodMatchesCount) + " good matches.")
 
 def main():
-    imgQuery = cv2.imread('uploads/Testbilder/Nacht/SchuerstabhausT.JPG', 0) # queryImage  
+    imgQuery = cv2.imread('uploads/Testbilder/Frauenkirche/90.JPG', 0) # queryImage  
 
     imgPathList = []
-    imgPathList.append('uploads/Testbilder/Nacht/SchuerstabhausN.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/30.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/45.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/60.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/75.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/105.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/120.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/135.JPG')
+    imgPathList.append('uploads/Testbilder/Frauenkirche/150.JPG')
 
     # Initiate detectors
     sift = cv2.xfeatures2d.SIFT_create()
@@ -54,7 +61,7 @@ def main():
     startTime = time.time()
     goodMatches = detect(sift, False, imgQuery, imgPathList)
     endTime = time.time()
-    print ("SIFT calculated " + str(goodMatches) + " in " + str(endTime - startTime) + " seconds" )
+    print ("SIFT calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )
 
     startTime = time.time()
     goodMatches = detect(surf, False, imgQuery, imgPathList)

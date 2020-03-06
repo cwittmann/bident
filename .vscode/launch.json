@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "FLASK_APP": "identify.py",
+                "FLASK_APP": "evaluate.py",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "0"
             },
