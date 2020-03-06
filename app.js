@@ -44,28 +44,16 @@ function postData(formData) {
 function showDetails(response){
     var responseJSON = JSON.parse(response);
     id = responseJSON.id;
-    certainty = responseJSON.certainty;
-
-    // Get data about building objects from file data/data.js
-    var dataObjects = JSON.parse(JSON.stringify(objects));
-
-    var matchingObject;
-
-    $.each(dataObjects, function(idx, dataObject) {
-        if (dataObject["id"] == responseJSON.id){
-            matchingObject = dataObject;            
-        }
-      });   
-    
-    name = matchingObject.name;
-    parent = matchingObject.parent;
-    description = matchingObject.description;    
+    name = responseJSON.name;
+    description = responseJSON.description;
+    certainty = responseJSON.certainty;    
     
     detailDialog = document.querySelector("#detail-dialog");
     detailDialog.style.display = "block";    
 
     detailsImage = document.querySelector("#details-image");
-    detailsImage.src = "images/" + id + ".jpg"
+    // detailsImage.src = "images/" + id + ".jpg";
+    detailsImage.src = "http://cwittmann.pythonanywhere.com/image/" + id;
 
     if (name != undefined){
         detailsName = document.querySelector("#details-name");
