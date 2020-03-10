@@ -1,3 +1,6 @@
+var userLat;
+var userLng;
+
 const cameraView = document.querySelector("#camera--view"),
     cameraSensor = document.querySelector("#camera--sensor"),
     cameraTrigger = document.querySelector("#camera--trigger")
@@ -112,6 +115,15 @@ function dataURItoBlob(dataURI) {
     return new Blob([ia], {type:mimeString});
 }
 
+function setGeolocation(position) {
+    userLat = position.coords.latitude;
+    userLng = position.coords.longitude;    
+}
+
+function handleGeolocationError(error){
+    console.log("Could not set geolocation: " + error.code + " " + error.message)
+}
+
 // Take a picture when cameraTrigger is tapped
 cameraTrigger.onclick = function() {
     cameraSensor.width = cameraView.videoWidth;
@@ -120,19 +132,24 @@ cameraTrigger.onclick = function() {
     dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
     var blob = dataURItoBlob(dataURL);
     var formData = new FormData(document.forms[0]);
-    formData.append("canvasImage", blob);    
-    
+    formData.append("canvasImage", blob);         
+    formData.append("userLat", userLat);
+    formData.append("userLng", userLng);
+
     postData(formData);
 };
 
-// Register Service Worker
 window.onload = () => {
     'use strict';
-  
+
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
                .register('./service-worker.js');
     }
+
+    // Get Geolocation
+    navigator.geolocation.getCurrentPosition(setGeolocation, handleGeolocationError);
   }
 
 // Start the video stream when the window loads
