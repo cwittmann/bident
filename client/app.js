@@ -45,7 +45,14 @@ function postData(formData) {
 }
 
 function showDetails(response){
-    var responseJSON = JSON.parse(response);
+    
+    if(response == 'No match found.'){
+        showNoMatchDialog();
+        return;
+    }
+    
+    var responseJSON = JSON.parse(response);       
+
     id = responseJSON.id;
     name = responseJSON.name;
     description = responseJSON.description;
@@ -55,7 +62,6 @@ function showDetails(response){
     detailDialog.style.display = "block";    
 
     detailsImage = document.querySelector("#details-image");
-    // detailsImage.src = "images/" + id + ".jpg";
     detailsImage.src = "http://cwittmann.pythonanywhere.com/image/" + id;
 
     if (name != undefined){
@@ -87,6 +93,23 @@ function showDetails(response){
         detailsCertainty.style.display = "block";
         detailsCertainty.append(certainty + " %");     
     }    
+}
+
+function showNoMatchDialog(){
+
+    detailsImage = document.querySelector("#details-image");
+    detailsImage.src = "images/icons/notfound.svg";
+
+    detailDialog = document.querySelector("#detail-dialog");
+    detailDialog.style.display = "block"; 
+    
+    detailsName = document.querySelector("#details-name");
+    detailsName.style.display = "block";
+    detailsName.append("No matches found");   
+    
+    detailsDescription = document.querySelector("#details-error");
+    detailsDescription.style.display = "block";
+    detailsDescription.append("Please try again from another perspective or select another matching algorithm in the settings."); 
 }
 
 function closeDetails(){
@@ -132,7 +155,7 @@ cameraTrigger.onclick = function() {
     dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
     var blob = dataURItoBlob(dataURL);
     var formData = new FormData(document.forms[0]);
-    formData.append("canvasImage", blob);         
+    formData.append("photo", blob);         
     formData.append("userLat", userLat);
     formData.append("userLng", userLng);
 

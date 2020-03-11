@@ -1,7 +1,8 @@
-import cv2
 from flask import Flask, jsonify, request, render_template, send_file
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
+import fileHandler
+import imageMatcher
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -33,76 +34,13 @@ class Building(db.Model):
 db.create_all()
 db.session.commit()
 
-def getBestMatch(userLat, userLng):
+def createResult(allBuildings, userLat, userLng):
 
-    userLatFloat = float(userLat)
-    userLngFloat = float(userLng)
-
-    # upperLatBound = userLatFloat + 0.001
-    # lowerLatBound = userLatFloat - 0.001
-    # leftLngBound = userLngFloat - 0.001
-    # rightLngBound = userLngFloat + 0.001
-
-    upperLatBound = userLatFloat + 1
-    lowerLatBound = userLatFloat - 1
-    leftLngBound = userLngFloat - 1
-    rightLngBound = userLngFloat + 1
-
-    allBuildings = Building.query.all()
-    buildingsInRange = []
-
-    for building in allBuildings:
-        if float(building.lat) < upperLatBound and float(building.lat) > lowerLatBound and float(building.lng) > leftLngBound and float(building.lng) < rightLngBound:
-            buildingsInRange.append(building)
-
-    imgDictionary = {}
-
-    for building in buildingsInRange:
-        buildingId = building.id
-        fileName = 'uploads/' + str(buildingId) + '.jpeg'
-        imgFile = cv2.imread(fileName, 0)
-        imgDictionary.update({buildingId:imgFile})
-
-    imgQuery = cv2.imread('uploads/blob.jpeg', 0) # queryImage
-
-    # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
-
-    FLANN_INDEX_KDTREE = 1
-    index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
-    search_params = dict(checks = 50)
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
-
-    # find the keypoints and descriptors with SIFT
-    kpQuery, desQuery = sift.detectAndCompute(imgQuery,None)
-
-    bestMatch = [0, None]
-
-    for imgKey in imgDictionary:
-        img = imgDictionary[imgKey]
-
-        kpDB, desDB = sift.detectAndCompute(img,None)
-        matches = flann.knnMatch(desQuery,desDB,k=2)
-
-        goodMatchesCount = 0
-
-        for m,n in matches:
-            if m.distance < 0.7*n.distance:
-                goodMatchesCount = goodMatchesCount + 1
-
-        if goodMatchesCount > bestMatch[0]:
-            bestMatch[0] = goodMatchesCount
-            bestMatch[1] = imgKey
-
-    return bestMatch[1], "99.9"
-
-
-def createResult(userLat, userLng):
-
-    bestMatchId, bestMatchCertainty = getBestMatch(userLat, userLng)
+    bestMatchId, bestMatchCertainty = imageMatcher.getBestMatch(allBuildings, userLat, userLng)
     matchedBuilding = Building.query.get(bestMatchId)
 
-    print(str(matchedBuilding.name))
+    if matchedBuilding == None:
+        return 'No match found.'
 
     return jsonify(
         id=matchedBuilding.id,
@@ -122,25 +60,12 @@ def returnResult():
             print(str(userLat))
             print(str(userLng))
 
-        print('=== UPLOAD ATTEMPTED ===')
-
-        if request.files == None:
-            print("NO FILES")
-
-        file = request.files['canvasImage']
-
-        if file is None:
-            print('=== NO FILE NAMED FILE ===')
-            return "ERROR: NO FILE NAMED FILE"
-
-        if file.filename == '':
-            print('=== NO SELECTED FILE ===')
-            return "ERROR: FILENAME IS EMPTY"
-        if file:
-            print('=== FILE FOUND ===')
-            file.save('./uploads/blob.jpeg')
-            print('=== FILE SUCCESSFULLY UPLOADED ===')
-            return createResult(userLat, userLng)
+        files = request.files
+        filePath = './uploads/blob.jpeg'
+        fileHandler.saveFile(files, filePath)
+        
+        allBuildings = Building.query.all()
+        return createResult(allBuildings, userLat, userLng)        
 
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
@@ -157,23 +82,10 @@ def insert():
     db.session.add(insert_this)
     db.session.commit()
 
-    if request.files == None:
-            print("NO FILES")
+    files = request.files
+    filePath = './uploads/' + str(id) + '.jpeg'
 
-    file = request.files['photo']
-
-    if file is None:
-        print('=== NO FILE NAMED FILE ===')
-
-    if file.filename == '':
-        print('=== NO SELECTED FILE ===')
-
-    if file:
-        print('=== FILE FOUND ===')
-        file.save('./uploads/' + str(id) + '.jpeg')
-        print('=== FILE SAVED ===')
-
-    return 'Successfully inserted record.'
+    return fileHandler.saveFile(files, filePath)    
 
 @app.route('/deleteAll')
 def deleteAll():

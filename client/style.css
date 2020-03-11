@@ -126,3 +126,9 @@ html, body{
     margin-left: 3%;
     font-weight: 900;
   }
+
+  #details-error { 
+    display: none;
+    margin-top: 20px;
+    font-size: 18px;
+  }
