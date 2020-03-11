@@ -84,8 +84,8 @@ html, body{
     vertical-align: middle;
   }
 
-  #details-image {
-    width: 100%;    
+  #details-image {       
+    max-height: 300px;
   }
 
   #details-name {    
