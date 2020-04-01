@@ -14,7 +14,7 @@ def getBuildingsInRange(allBuildings, userLat, userLng):
     buildingsInRange = []
 
     for building in allBuildings:
-        if float(building.lat) < upperLatBound and float(building.lat) > lowerLatBound and float(building.lng) > leftLngBound and float(building.lng) < rightLngBound:
+        if building.lat < upperLatBound and building.lat > lowerLatBound and building.lng > leftLngBound and building.lng < rightLngBound:
             buildingsInRange.append(building)
 
     return buildingsInRange
