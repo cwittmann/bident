@@ -20,7 +20,7 @@
             <h1>BIdent Building Identification</h1>
         </header>
 
-        <div id="detail-dialog" onclick="closeDetails()">
+        <div id="detail-dialog">
             <img id="details-image"></img>
             <div id="details-name" class="details-text"></div>  
 
@@ -36,6 +36,9 @@
             <div id="details-error" class="details-text">
                 <img src="images/icons/description.svg" class="details-icon">
                 </div>
+            <div id="details-confirm" onclick="closeDetails()">
+                <btn>OK</btn>
+                </div>
         </div>
         
         <main id="camera">             
@@ -44,7 +47,7 @@
             <button id="camera--trigger">                
                 <img src="images/icons/camera.svg"/>                    
             </button>                            
-            <h2>Click to identify building</h2>                
+            <h2>Identifizieren</h2>                
             
         </main>           
         

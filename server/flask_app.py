@@ -36,17 +36,20 @@ db.session.commit()
 
 def createResult(allBuildings, userLat, userLng):
 
-    bestMatchId, bestMatchCertainty = imageMatcher.getBestMatch(allBuildings, userLat, userLng)
+    bestMatchId, matchCertainty = imageMatcher.getBestMatch(allBuildings, userLat, userLng)
     matchedBuilding = Building.query.get(bestMatchId)
 
-    if matchedBuilding == None:
-        return 'No match found.'
+    if matchedBuilding == None or matchCertainty == None:
+        return jsonify(
+        success=False
+    )
 
     return jsonify(
+        success=True,
         id=matchedBuilding.id,
         name=matchedBuilding.name,
         description=matchedBuilding.description,
-        certainty=bestMatchCertainty
+        certainty=matchCertainty
     )
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -65,6 +68,7 @@ def returnResult():
         fileHandler.saveFile(files, filePath)
         
         allBuildings = Building.query.all()
+
         return createResult(allBuildings, userLat, userLng)        
 
 @app.route('/insert', methods=['GET', 'POST'])

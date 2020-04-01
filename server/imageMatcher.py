@@ -1,6 +1,17 @@
 import cv2
 import geoFilter
-from flask import jsonify
+
+def getCertainty(goodMatchesCount):
+    if goodMatchesCount > 192:
+        return "Hoch"
+    if goodMatchesCount > 109:
+        return "Mittel"
+    if goodMatchesCount > 62:
+        return "Niedrig"    
+    if goodMatchesCount > 0:
+        return "Sehr niedrig"   
+    
+    return None
 
 def getBestMatch(allBuildings, userLat, userLng):
 
@@ -45,4 +56,4 @@ def getBestMatch(allBuildings, userLat, userLng):
             bestMatch[0] = goodMatchesCount
             bestMatch[1] = imgKey
 
-    return bestMatch[1], "99.9"
+    return bestMatch[1], getCertainty(goodMatchesCount)

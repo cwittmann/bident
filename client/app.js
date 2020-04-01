@@ -44,14 +44,16 @@ function postData(formData) {
         });
 }
 
-function showDetails(response){
-    
-    if(response == 'No match found.'){
+function showDetails(response){    
+       
+    var responseJSON = JSON.parse(response);       
+
+    success = responseJSON.success;
+
+    if(!success){
         showNoMatchDialog();
         return;
     }
-    
-    var responseJSON = JSON.parse(response);       
 
     id = responseJSON.id;
     name = responseJSON.name;
@@ -91,8 +93,11 @@ function showDetails(response){
     if (certainty != undefined){
         detailsCertainty = document.querySelector("#details-certainty");
         detailsCertainty.style.display = "block";
-        detailsCertainty.append(certainty + " %");     
+        detailsCertainty.append(certainty);     
     }    
+
+    detailsConfirm = document.querySelector("#details-confirm");
+    detailsConfirm.style.display = "block";
 }
 
 function showNoMatchDialog(){
@@ -105,11 +110,14 @@ function showNoMatchDialog(){
     
     detailsName = document.querySelector("#details-name");
     detailsName.style.display = "block";
-    detailsName.append("No matches found");   
+    detailsName.append("Kein Objekt gefunden");   
     
     detailsDescription = document.querySelector("#details-error");
     detailsDescription.style.display = "block";
-    detailsDescription.append("Please try again from another perspective or select another matching algorithm in the settings."); 
+    detailsDescription.append("Bitte versuche es noch einmal aus einer anderen Perspektive."); 
+
+    detailsConfirm = document.querySelector("#details-confirm");
+    detailsConfirm.style.display = "block";
 }
 
 function closeDetails(){

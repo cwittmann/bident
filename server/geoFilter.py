@@ -1,17 +1,15 @@
 def getBuildingsInRange(allBuildings, userLat, userLng):
 
+    #geoDistance = 0.001
+    geoDistance = 10
+
     userLatFloat = float(userLat)
-    userLngFloat = float(userLng)
+    userLngFloat = float(userLng)    
 
-    # upperLatBound = userLatFloat + 0.001
-    # lowerLatBound = userLatFloat - 0.001
-    # leftLngBound = userLngFloat - 0.001
-    # rightLngBound = userLngFloat + 0.001
-
-    upperLatBound = userLatFloat + 1
-    lowerLatBound = userLatFloat - 1
-    leftLngBound = userLngFloat - 1
-    rightLngBound = userLngFloat + 1
+    upperLatBound = userLatFloat + geoDistance
+    lowerLatBound = userLatFloat - geoDistance
+    leftLngBound = userLngFloat - geoDistance
+    rightLngBound = userLngFloat + geoDistance
     
     buildingsInRange = []
 
