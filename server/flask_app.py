@@ -25,11 +25,9 @@ class Building(db.Model):
   id=db.Column(db.Integer, primary_key=True)
   name=db.Column(db.Text)
   description=db.Column(db.Text)
-  lat=db.Column(db.Text)
-  lng=db.Column(db.Text)
-  parentId=db.Column(db.Integer)
-  imageData=db.Column(db.LargeBinary)
-  descriptor=db.Column(db.LargeBinary)
+  lat=db.Column(db.Numeric)
+  lng=db.Column(db.Numeric)
+  parentId=db.Column(db.Integer)  
 
 db.create_all()
 db.session.commit()
@@ -42,14 +40,26 @@ def createResult(allBuildings, userLat, userLng):
     if matchedBuilding == None or matchCertainty == None:
         return jsonify(
         success=False
-    )
+    )   
+
+    matchParentId = None
+    matchParentName = None
+
+    if matchedBuilding.parentId != None:
+        parentBuilding = Building.query.get(matchedBuilding.parentId)
+
+        if parentBuilding != None:        
+            matchParentId=parentBuilding.id,
+            matchParentName=parentBuilding.name
 
     return jsonify(
         success=True,
         id=matchedBuilding.id,
         name=matchedBuilding.name,
         description=matchedBuilding.description,
-        certainty=matchCertainty
+        certainty=matchCertainty,
+        parentId=matchParentId,
+        parentName=matchParentName
     )
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -59,9 +69,6 @@ def returnResult():
         if request.form["userLat"] and request.form["userLng"]:
             userLat = request.form["userLat"]
             userLng = request.form["userLng"]
-            print("USER COORDS: ")
-            print(str(userLat))
-            print(str(userLng))
 
         files = request.files
         filePath = './uploads/blob.jpeg'
@@ -81,7 +88,7 @@ def insert():
     lng = request.form["lng"]
     parentId = request.form["parentId"]
 
-    insert_this = Building(id=id, name=name, description=description, lat=lat, lng=lng, parentId=parentId, imageData=None, descriptor=None)
+    insert_this = Building(id=id, name=name, description=description, lat=lat, lng=lng, parentId=parentId)
 
     db.session.add(insert_this)
     db.session.commit()
@@ -103,6 +110,16 @@ def delete(buildingId):
     db.session.commit()
     return 'Successfully deleted record.'
 
+@app.route('/building/<buildingId>')
+def building(buildingId):
+    result = Building.query.get(buildingId)    
+    return jsonify(
+        success=True,
+        id=result.id,
+        name=result.name,
+        description=result.description                
+    )
+
 @app.route('/buildings')
 def buildings():
     results = Building.query.all()
@@ -114,5 +131,3 @@ def image(imageId):
     return send_file(fileName, mimetype='image/jpeg')
 
 # app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
-
-# curl -F "file=@image.jpg" http://localhost:8000/home

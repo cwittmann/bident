@@ -22,19 +22,24 @@
 
         <div id="detail-dialog">
             <img id="details-image"></img>
-            <div id="details-name" class="details-text"></div>  
-
+            <div id="details-name">
+                <span id="details-name-text" class="details-text"></span>
+            </div>  
             <div id="details-parent" class="details-text">
                 <img src="images/icons/parent.svg" class="details-icon">
-                <span>Teil von: </span></div>            
+                Teil von:
+                <span id="details-parent-text" class="details-text"></span></div>            
             <div id="details-description" class="details-text">
                 <img src="images/icons/description.svg" class="details-icon">
-                <span>Beschreibung: </span></div>            
+                Beschreibung:
+                <span id="details-description-text" class="details-text"></span></div>            
             <div id="details-certainty" class="details-text">
                 <img src="images/icons/certainty.svg" class="details-icon">
-                <span>Identifikationssicherheit: </span></div>
+                Identifikationssicherheit:
+                <span id="details-certainty-text" class="details-text"></span></div>
             <div id="details-error" class="details-text">
                 <img src="images/icons/description.svg" class="details-icon">
+                <span id="details-error-text" class="details-text"></span>
                 </div>
             <div id="details-confirm" onclick="closeDetails()">
                 <btn>OK</btn>

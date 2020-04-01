@@ -29,7 +29,6 @@ function cameraStart() {
 function postData(formData) {   
     // Local: http://192.168.2.103:5000/
     // Local: http://127.0.0.1:5000/
-    // Web Server: https://cwittmann.pythonanywhere.com/
     
     fetch("https://cwittmann.pythonanywhere.com/", { method: 'POST', body: formData })
         .then(function(response) {
@@ -44,7 +43,23 @@ function postData(formData) {
         });
 }
 
+function getBuildingFromServer(buildingId) {
+    fetch("https://cwittmann.pythonanywhere.com/building/" + buildingId, { method: 'GET' })
+        .then(function(response) {
+            response.text().then(function (response) {
+                console.log(response);
+                showDetails(response);
+            });
+        })
+        .catch(function(response) {
+            console.log(response);
+            alert(response);
+        });
+}
+
 function showDetails(response){    
+
+    closeDetails();
        
     var responseJSON = JSON.parse(response);       
 
@@ -58,7 +73,9 @@ function showDetails(response){
     id = responseJSON.id;
     name = responseJSON.name;
     description = responseJSON.description;
-    certainty = responseJSON.certainty;    
+    certainty = responseJSON.certainty;
+    parentId = responseJSON.parentId;        
+    parentName = responseJSON.parentName;
     
     detailDialog = document.querySelector("#detail-dialog");
     detailDialog.style.display = "block";    
@@ -69,31 +86,30 @@ function showDetails(response){
     if (name != undefined){
         detailsName = document.querySelector("#details-name");
         detailsName.style.display = "block";
-        detailsName.append(name);        
+        detailsNameText = document.querySelector("#details-name-text");        
+        detailsNameText.append(name);        
     }
 
-    if (parent != undefined){
-        var parent;
-        $.each(dataObjects, function(idx, dataObject) {
-            if (dataObject["id"] == parent){
-                parent = dataObject;            
-            }
-          }); 
+    if (parentId && parentName){        
         detailsParent = document.querySelector("#details-parent");
         detailsParent.style.display = "block";
-        detailsParent.append(parent.name);        
+        detailsParentText = document.querySelector("#details-parent-text");
+        detailsParentText.append(parentName);
+        detailsParentText.onclick = function() { getBuildingFromServer(parentId); };        
     }
 
     if (description != undefined){
         detailsDescription = document.querySelector("#details-description");
         detailsDescription.style.display = "block";
-        detailsDescription.append(description);     
+        detailsDescriptionText = document.querySelector("#details-description-text");        
+        detailsDescriptionText.append(description);  
     }
 
     if (certainty != undefined){
         detailsCertainty = document.querySelector("#details-certainty");
         detailsCertainty.style.display = "block";
-        detailsCertainty.append(certainty);     
+        detailsCertaintyText = document.querySelector("#details-certainty-text");        
+        detailsCertaintyText.append(certainty);  
     }    
 
     detailsConfirm = document.querySelector("#details-confirm");
@@ -108,22 +124,46 @@ function showNoMatchDialog(){
     detailDialog = document.querySelector("#detail-dialog");
     detailDialog.style.display = "block"; 
     
-    detailsName = document.querySelector("#details-name");
+    detailsName = document.querySelector("#details-name-text");
     detailsName.style.display = "block";
     detailsName.append("Kein Objekt gefunden");   
     
-    detailsDescription = document.querySelector("#details-error");
-    detailsDescription.style.display = "block";
-    detailsDescription.append("Bitte versuche es noch einmal aus einer anderen Perspektive."); 
+    detailsError = document.querySelector("#details-error");
+    detailsError.style.display = "block";
+    detailsError.append("Bitte versuche es noch einmal aus einer anderen Perspektive."); 
 
     detailsConfirm = document.querySelector("#details-confirm");
     detailsConfirm.style.display = "block";
 }
 
 function closeDetails(){
+    detailsName = document.querySelector("#details-name");
+    detailsName.style.display = "none";
+    detailsNameText = document.querySelector("#details-name-text");
+    detailsNameText.innerHTML = "";
+
+    detailsParent = document.querySelector("#details-parent");
+    detailsParent.style.display = "none";
+    detailsParentText = document.querySelector("#details-parent-text");
+    detailsParentText.innerHTML = "";
+
+    detailsDescription = document.querySelector("#details-description");
+    detailsDescription.style.display = "none";
+    detailsDescriptionText = document.querySelector("#details-description-text");
+    detailsDescriptionText.innerHTML = "";
+
+    detailsCertainty = document.querySelector("#details-certainty");
+    detailsCertainty.style.display = "none";
+    detailsCertaintyText = document.querySelector("#details-certainty-text");
+    detailsCertaintyText.innerHTML = "";    
+
+    detailsError = document.querySelector("#details-error");
+    detailsError.style.display = "none";
+    detailsErrorText = document.querySelector("#details-error-text");
+    detailsErrorText.innerHTML = "";
+    
     detailDialog = document.querySelector("#detail-dialog");
-    detailDialog.style.display = "none";
-    window.location.href = "index.html";
+    detailDialog.style.display = "none";    
 }
 
 function dataURItoBlob(dataURI) {
