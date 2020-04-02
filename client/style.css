@@ -32,14 +32,14 @@ html, body{
     text-align: center;   
   }
 
-  #camera, #camera--view, #camera--sensor, #camera--output{
+  #camera, #camera-view, #camera-sensor{
       position: fixed;
       height: 100%;
       width: 100%;
       object-fit: cover;
   } 
 
-   #camera--trigger{         
+   #camera-trigger{         
     width: 150px;
     height: 150px;
     background-color: #78c1e5;
