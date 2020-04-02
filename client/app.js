@@ -117,10 +117,11 @@ function intializeCamera(){
 }
 
 window.onload = () => {
-    registerServiceWorker();    
-    intializeCamera();    
+    registerServiceWorker();   
     navigator.geolocation.getCurrentPosition(setGeolocation, handleGeolocationError);    
-  }    
+  }   
+ 
+intializeCamera();
 
 
   

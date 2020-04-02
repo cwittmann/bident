@@ -21,8 +21,8 @@ after installing.
 
 # Running the client
 While it is possible to run the application by opening the index.html locally,
-this will cause some errors. Since the application is a Progressive Web App,
-it should be installed on a server.
+this will cause some background errors. Since the application is a Progressive Web App,
+it should be installed on a server and run from there.
 
 Supported browsers are Chrome 80+ and Firefox 74+.
 
