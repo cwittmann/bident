@@ -3,6 +3,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 import fileHandler
 import imageMatcher
+import os
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -25,9 +26,9 @@ class Building(db.Model):
   id=db.Column(db.Integer, primary_key=True)
   name=db.Column(db.Text)
   description=db.Column(db.Text)
-  lat=db.Column(db.Numeric)
-  lng=db.Column(db.Numeric)
-  parentId=db.Column(db.Integer)  
+  lat=db.Column(db.DECIMAL(9,6))
+  lng=db.Column(db.DECIMAL(9,6))
+  parentId=db.Column(db.Integer)
 
 db.create_all()
 db.session.commit()
@@ -40,7 +41,7 @@ def createResult(allBuildings, userLat, userLng):
     if matchedBuilding == None or matchCertainty == None:
         return jsonify(
         success=False
-    )   
+    )
 
     matchParentId = None
     matchParentName = None
@@ -48,7 +49,7 @@ def createResult(allBuildings, userLat, userLng):
     if matchedBuilding.parentId != None:
         parentBuilding = Building.query.get(matchedBuilding.parentId)
 
-        if parentBuilding != None:        
+        if parentBuilding != None:
             matchParentId=parentBuilding.id,
             matchParentName=parentBuilding.name
 
@@ -73,10 +74,10 @@ def returnResult():
         files = request.files
         filePath = './uploads/blob.jpeg'
         fileHandler.saveFile(files, filePath)
-        
+
         allBuildings = Building.query.all()
 
-        return createResult(allBuildings, userLat, userLng)        
+        return createResult(allBuildings, userLat, userLng)
 
 @app.route('/insert', methods=['GET', 'POST'])
 def insert():
@@ -96,33 +97,30 @@ def insert():
     files = request.files
     filePath = './uploads/' + str(id) + '.jpeg'
 
-    return fileHandler.saveFile(files, filePath)    
-
-@app.route('/deleteAll')
-def deleteAll():
-    db.session.query(Building).delete()
-    db.session.commit()
-    return 'Successfully deleted all records.'
+    return fileHandler.saveFile(files, filePath)
 
 @app.route('/delete/<buildingId>', methods=['GET', 'POST'])
 def delete(buildingId):
     Building.query.filter_by(id=buildingId).delete()
     db.session.commit()
+
+    fileName = '/home/cwittmann/uploads/' + str(buildingId) + '.jpeg'
+    os.remove(fileName)
     return 'Successfully deleted record.'
 
 @app.route('/building/<buildingId>')
 def building(buildingId):
-    result = Building.query.get(buildingId)    
+    result = Building.query.get(buildingId)
     return jsonify(
         success=True,
         id=result.id,
         name=result.name,
-        description=result.description                
+        description=result.description
     )
 
 @app.route('/buildings')
 def buildings():
-    results = Building.query.all()
+    results = Building.query.all()   
     return render_template('buildings.html', results = results)
 
 @app.route('/image/<imageId>')
