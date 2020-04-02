@@ -21,7 +21,7 @@ function showDetails(response){
     parentName = responseJSON.parentName;    
     
     showElement("#detail-dialog");
-    setImageSrc("#details-image", "http://cwittmann.pythonanywhere.com/image/" + id);
+    setImageSrc("#details-image", "https://cwittmann.pythonanywhere.com/image/" + id);
 
     if (name != undefined){
         showElementWithText("#details-name", name);                   
