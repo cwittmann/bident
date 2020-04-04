@@ -37,13 +37,13 @@ def detect(detector, useBinaryDescriptor, imgQuery, imgPathList):
         print(str(detector) + " " + str(goodMatchesCount))
 
 def main():
-    imgQuery = cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/0.JPG', 0) # queryImage      
+    imgQuery = cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche100.JPG', 0) # queryImage      
     imgPathList = []   
 
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/10.JPG', 0))
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/20.JPG', 0))
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/30.JPG', 0))    
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/40.JPG', 0))              
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche50.jpg', 0))
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche25.jpg', 0))
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche125.jpg', 0))
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche6125.jpg', 0))        
 
     # Initiate detectors
     sift = cv2.xfeatures2d.SIFT_create()

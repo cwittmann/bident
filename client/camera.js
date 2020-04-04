@@ -66,9 +66,9 @@ function createFormData(blob){
 
 // Captures an image from the video element of the main page and converts it to a blob.
 function createBlobFromVideo(){
-    cameraSensor.width = cameraView.videoWidth;
-    cameraSensor.height = cameraView.videoHeight;
-    cameraSensor.getContext("2d").drawImage(cameraView, 0, 0);    
+    cameraSensor.width = 720;
+    cameraSensor.height = 1280;
+    cameraSensor.getContext("2d").drawImage(cameraView, 0, 0, 720, 1280);    
     dataURL = cameraSensor.toDataURL('image/jpeg', 1.0);
 
     return dataURItoBlob(dataURL);
