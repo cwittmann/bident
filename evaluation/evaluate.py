@@ -37,13 +37,14 @@ def detect(detector, useBinaryDescriptor, imgQuery, imgPathList):
         print(str(detector) + " " + str(goodMatchesCount))
 
 def main():
-    imgQuery = cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche100.JPG', 0) # queryImage      
+    imgQuery = cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/0.JPG', 0)
     imgPathList = []   
 
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche50.jpg', 0))
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche25.jpg', 0))
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche125.jpg', 0))
-    imgPathList.append(cv2.imread('evaluation/Testbilder/Bildgroesse/Lorenzkirche6125.jpg', 0))        
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/10.JPG', 0))    
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/20.JPG', 0))    
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/30.JPG', 0))    
+    imgPathList.append(cv2.imread('evaluation/Testbilder/Skalierung/St. Peter/40.JPG', 0))        
+    
 
     # Initiate detectors
     sift = cv2.xfeatures2d.SIFT_create()
@@ -54,34 +55,34 @@ def main():
     akaze = cv2.AKAZE_create()    
 
     startTime = time.time()
-    goodMatches = detect(sift, False, imgQuery, imgPathList)
+    detect(sift, False, imgQuery, imgPathList)
     endTime = time.time()
-    print ("SIFT calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" ) 
+    print ("SIFT calculated good matches in " + str(endTime - startTime) + " seconds" ) 
     
     startTime = time.time()
-    goodMatches = detect(surf, False, imgQuery, imgPathList)
+    detect(surf, False, imgQuery, imgPathList)
     endTime = time.time()
-    print ("SURF calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )
+    print ("SURF calculated good matches in " + str(endTime - startTime) + " seconds" )
     
     startTime = time.time()
-    goodMatches = detect(brisk, True, imgQuery, imgPathList)
+    detect(brisk, True, imgQuery, imgPathList)
     endTime = time.time()
-    print ("BRISK calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )
+    print ("BRISK calculated good matches in " + str(endTime - startTime) + " seconds" )
    
     startTime = time.time()
-    goodMatches = detect(orb, True, imgQuery, imgPathList)
+    detect(orb, True, imgQuery, imgPathList)
     endTime = time.time()
-    print ("ORB calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )
+    print ("ORB calculated good matches in " + str(endTime - startTime) + " seconds" )
 
     startTime = time.time()
-    goodMatches = detect(kaze, False, imgQuery, imgPathList)
+    detect(kaze, False, imgQuery, imgPathList)
     endTime = time.time()
-    print ("KAZE calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )
+    print ("KAZE calculated good matches in " + str(endTime - startTime) + " seconds" )
 
     startTime = time.time()
     goodMatches = detect(akaze, True, imgQuery, imgPathList)
     endTime = time.time()
-    print ("AKAZE calculated " + str(goodMatches) + " good matches in " + str(endTime - startTime) + " seconds" )   ## 
+    print ("AKAZE calculated good matches in " + str(endTime - startTime) + " seconds" )   ## 
 
     
 main()
