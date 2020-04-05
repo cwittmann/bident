@@ -2,11 +2,11 @@ import cv2
 import geoFilter
 
 def getCertainty(goodMatchesCount):
-    if goodMatchesCount > 192:
+    if goodMatchesCount > 213:
         return "Hoch"
-    if goodMatchesCount > 109:
+    if goodMatchesCount > 146:
         return "Mittel"
-    if goodMatchesCount > 62:
+    if goodMatchesCount > 94:
         return "Niedrig"    
     if goodMatchesCount > 0:
         return "Sehr niedrig"   
@@ -28,7 +28,7 @@ def getBestMatch(allBuildings, userLat, userLng):
     imgQuery = cv2.imread('uploads/blob.jpeg', 0) # queryImage
 
     # Initiate SIFT detector
-    sift = cv2.xfeatures2d.SIFT_create()
+    kaze = cv2.KAZE_create()
 
     FLANN_INDEX_KDTREE = 1
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
@@ -36,14 +36,14 @@ def getBestMatch(allBuildings, userLat, userLng):
     flann = cv2.FlannBasedMatcher(index_params, search_params)
 
     # find the keypoints and descriptors with SIFT
-    kpQuery, desQuery = sift.detectAndCompute(imgQuery,None)
+    kpQuery, desQuery = kaze.detectAndCompute(imgQuery,None)
 
     bestMatch = [0, None]
 
     for imgKey in imgDictionary:
         img = imgDictionary[imgKey]
 
-        kpDB, desDB = sift.detectAndCompute(img,None)
+        kpDB, desDB = kaze.detectAndCompute(img,None)
         matches = flann.knnMatch(desQuery,desDB,k=2)
 
         goodMatchesCount = 0
