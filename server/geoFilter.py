@@ -1,7 +1,9 @@
+# Finds all buildings in list whose coordinates match those given
 def getBuildingsInRange(allBuildings, userLat, userLng):
 
-    #geoDistance = 0.001
-    geoDistance = 10
+    # Set to a more realistic value like 0.001 to only find objects close to your coordinates. Please make sure that there are objects in the database which
+    # are near you.    
+    geoDistance = 1
 
     userLatFloat = float(userLat)
     userLngFloat = float(userLng)    

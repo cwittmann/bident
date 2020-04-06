@@ -1,3 +1,4 @@
+# Saves uploaded photo file to server
 def saveFile(files, filePath):
     if files == None:
         return 'Error: No files in request.'

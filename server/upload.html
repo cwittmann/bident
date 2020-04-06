@@ -1,0 +1,36 @@
+<html>
+   <head>
+   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   
+   <script type="text/javascript"> 
+      function generateId()     {
+         var number = Math.floor( Math.random() * 100000000);
+         document.getElementById('id').value = number;
+      }              
+             
+   </script>
+</head>
+<body onload="generateId()">
+
+      <iframe style="width:100%; height: 500px;" src="https://cwittmann.pythonanywhere.com/buildings"></iframe>
+
+      <form action="https://cwittmann.pythonanywhere.com/insert" method="POST" enctype="multipart/form-data">
+         <label for="id">Id</label>
+         <input type="number" id="id" name="id"><br>
+         <label for="name">Name</label>
+         <input type="text" id="name" name="name"><br>
+         <label for="description">Description</label>
+         <input type="text" id="description" name="description"><br>
+         <label for="lat">Latitude</label>
+         <input type="text" id="lat" name="lat"><br>
+         <label for="lng">Longitude</label>
+         <input type="text" id="lng" name="lng"><br>     
+         <label for="parentId">Gebäude-Id</label>
+         <input type="number" id="parentId" name="parentId"><br>        
+         <label for="photo">Bilddatei</label>
+         <input type="file" id="photo" name="photo"><br>        
+         <input type="submit">
+      </form>    
+   
+      
+   </body>
+</html>

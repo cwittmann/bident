@@ -9,6 +9,7 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+# Connect to database
 URI = "mysql://{username}:{password}@{hostname}/{databasename}".format(username='cwittmann',
 password='cW53a8x6',
 hostname='cwittmann.mysql.pythonanywhere-services.com',
@@ -16,7 +17,6 @@ databasename='cwittmann$default')
 app.config['SQLALCHEMY_DATABASE_URI']= URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = 280
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
 class Building(db.Model):
@@ -33,6 +33,7 @@ class Building(db.Model):
 db.create_all()
 db.session.commit()
 
+# Create result of matching as JSON object
 def createResult(allBuildings, userLat, userLng):
 
     bestMatchId, matchCertainty = imageMatcher.getBestMatch(allBuildings, userLat, userLng)
@@ -63,23 +64,23 @@ def createResult(allBuildings, userLat, userLng):
         parentName=matchParentName
     )
 
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/', methods = ['POST'])
 def returnResult():
-    if request.method == 'POST':
+    
+    if request.form["userLat"] and request.form["userLng"]:
+        userLat = request.form["userLat"]
+        userLng = request.form["userLng"]
 
-        if request.form["userLat"] and request.form["userLng"]:
-            userLat = request.form["userLat"]
-            userLng = request.form["userLng"]
+    files = request.files
+    filePath = './uploads/blob.jpeg'
+    fileHandler.saveFile(files, filePath)
 
-        files = request.files
-        filePath = './uploads/blob.jpeg'
-        fileHandler.saveFile(files, filePath)
+    allBuildings = Building.query.all()
 
-        allBuildings = Building.query.all()
+    return createResult(allBuildings, userLat, userLng)
 
-        return createResult(allBuildings, userLat, userLng)
-
-@app.route('/insert', methods=['GET', 'POST'])
+# Insert new building into database and save its image on server
+@app.route('/insert', methods=['POST'])
 def insert():
 
     id = request.form["id"]
@@ -99,6 +100,7 @@ def insert():
 
     return fileHandler.saveFile(files, filePath)
 
+# Delete specified building from database
 @app.route('/delete/<buildingId>', methods=['GET', 'POST'])
 def delete(buildingId):
     Building.query.filter_by(id=buildingId).delete()
@@ -108,6 +110,7 @@ def delete(buildingId):
     os.remove(fileName)
     return 'Successfully deleted record.'
 
+# Get information on specified building
 @app.route('/building/<buildingId>')
 def building(buildingId):
     result = Building.query.get(buildingId)
@@ -118,11 +121,13 @@ def building(buildingId):
         description=result.description
     )
 
+# Show all buildings
 @app.route('/buildings')
 def buildings():
     results = Building.query.all()   
     return render_template('buildings.html', results = results)
 
+# Get image of building with specified id
 @app.route('/image/<imageId>')
 def image(imageId):
     fileName = '/home/cwittmann/uploads/' + str(imageId) + '.jpeg'

@@ -1,6 +1,7 @@
 import cv2
 import geoFilter
 
+# Returns a value showing the certainty of the matching depending on the number of good matches
 def getCertainty(goodMatchesCount):
     if goodMatchesCount > 213:
         return "Hoch"
@@ -13,47 +14,53 @@ def getCertainty(goodMatchesCount):
     
     return None
 
-def getBestMatch(allBuildings, userLat, userLng):
-
-    buildingsInRange = geoFilter.getBuildingsInRange(allBuildings, userLat, userLng)    
-
-    imgDictionary = {}
+# Creates and image dictionary which assigns images to their buildings' ids
+def createImageDictionary(buildingsInRange):
+    imageDictionary = {}
 
     for building in buildingsInRange:
         buildingId = building.id
         fileName = 'uploads/' + str(buildingId) + '.jpeg'
-        imgFile = cv2.imread(fileName, 0)
-        imgDictionary.update({buildingId:imgFile})
+        imageFile = cv2.imread(fileName, 0)
+        imageDictionary.update({buildingId:imageFile})
 
-    imgQuery = cv2.imread('uploads/blob.jpeg', 0) # queryImage
+    return imageDictionary
 
-    # Initiate SIFT detector
-    kaze = cv2.KAZE_create()
-
+# Intialize and return the Flann-based Matcher
+def initializeFlannMatcher():
     FLANN_INDEX_KDTREE = 1
     index_params = dict(algorithm = FLANN_INDEX_KDTREE, trees = 5)
     search_params = dict(checks = 50)
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    
+    return cv2.FlannBasedMatcher(index_params, search_params)    
 
-    # find the keypoints and descriptors with SIFT
-    kpQuery, desQuery = kaze.detectAndCompute(imgQuery,None)
+# Determines which building in the list is the most likely to match the uploaded image. Feature detection and matching both use the KAZE Features algorithm.
+def getBestMatch(allBuildings, userLat, userLng):    
+    buildingsInRange = geoFilter.getBuildingsInRange(allBuildings, userLat, userLng)    
+    imageDictionary = createImageDictionary(buildingsInRange)
+    uploadedImage = cv2.imread('uploads/blob.jpeg', 0)
+       
+    kaze = cv2.KAZE_create()
+    kpUploaded, desUploaded = kaze.detectAndCompute(uploadedImage,None)
 
-    bestMatch = [0, None]
+    bestMatchSoFar = [0, None]
+    flannMatcher = initializeFlannMatcher()
 
-    for imgKey in imgDictionary:
-        img = imgDictionary[imgKey]
+    for imageKey in imageDictionary:
+        image = imageDictionary[imageKey]
 
-        kpDB, desDB = kaze.detectAndCompute(img,None)
-        matches = flann.knnMatch(desQuery,desDB,k=2)
+        kpDB, desDB = kaze.detectAndCompute(image,None)
+        matches = flannMatcher.knnMatch(desUploaded,desDB,k=2)
 
         goodMatchesCount = 0
 
         for m,n in matches:
+            # Lowe's Distance Ratio Test
             if m.distance < 0.7*n.distance:
                 goodMatchesCount = goodMatchesCount + 1
 
-        if goodMatchesCount > bestMatch[0]:
-            bestMatch[0] = goodMatchesCount
-            bestMatch[1] = imgKey
+        if goodMatchesCount > bestMatchSoFar[0]:
+            bestMatchSoFar[0] = goodMatchesCount
+            bestMatchSoFar[1] = imageKey
 
-    return bestMatch[1], getCertainty(goodMatchesCount)
+    return bestMatchSoFar[1], getCertainty(goodMatchesCount)
